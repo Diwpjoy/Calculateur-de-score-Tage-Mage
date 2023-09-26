@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Score TAGE MAGE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        h3 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .credit {
+            margin-top: 40px;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="method">Choisissez une méthode :</label>
+        <select id="method" onchange="toggleMethod()">
+            <option value="sousTests">Saisir les scores des 6 sous-tests</option>
+            <option value="domaines">Saisir les scores des 3 domaines</option>
+        </select>
+
+        <div id="sousTestsSection">
+            <h3>Résolution de problème</h3>
+            <label for="sousTest1">Sous-test 1 (Calcul) :</label>
+            <input type="number" id="sousTest1" min="-15" max="60" value="0">
+            <label for="sousTest2">Sous-test 2 (Conditions minimales) :</label>
+            <input type="number" id="sousTest2" min="-15" max="60" value="0">
+
+            <h3>Aptitudes verbales</h3>
+            <label for="sousTest3">Sous-test 3 (Compréhension de textes) :</label>
+            <input type="number" id="sousTest3" min="-15" max="60" value="0">
+            <label for="sousTest4">Sous-test 4 (Expression) :</label>
+            <input type="number" id="sousTest4" min="-15" max="60" value="0">
+
+            <h3>Raisonnement logique</h3>
+            <label for="sousTest5">Sous-test 5 (Compréhension de textes) :</label>
+            <input type="number" id="sousTest5" min="-15" max="60" value="0">
+            <label for="sousTest6">Sous-test 6 (Logique) :</label>
+            <input type="number" id="sousTest6" min="-15" max="60" value="0">
+        </div>
+
+        <div id="domainesSection" class="hidden">
+            <h3>Domaines</h3>
+            <label for="domaine1">Résolution de problème :</label>
+            <input type="number" id="domaine1" min="-30" max="120" value="0">
+            <label for="domaine2">Aptitudes verbales :</label>
+            <input type="number" id="domaine2" min="-30" max="120" value="0">
+            <label for="domaine3">Raisonnement logique :</label>
+            <input type="number" id="domaine3" min="-30" max="120" value="0">
+        </div>
+
+        <button onclick="calculateScoreFinal()">Calculer le score final</button>
+
+        <div class="result" id="result">Votre score final : 0 sur 600</div>
+        <div class="credit">Crédit : Diwpjoy BARUA</div>
+    </div>
+
+    <script>
+        function toggleMethod() {
+            const method = document.getElementById('method').value;
+            if (method === 'sousTests') {
+                document.getElementById('sousTestsSection').style.display = 'block';
+                document.getElementById('domainesSection').style.display = 'none';
+            } else {
+                document.getElementById('sousTestsSection').style.display = 'none';
+                document.getElementById('domainesSection').style.display = 'block';
+            }
+        }
+
+        function calculateScoreFinal() {
+            const method = document.getElementById('method').value;
+            let scoreFinal;
+
+            if (method === 'sousTests') {
+                let sousTest = [];
+                let domaine = [];
+                for (let i = 1; i <= 6; i++) {
+                    sousTest[i] = parseInt(document.getElementById('sousTest' + i).value) || 0;
+                    if (sousTest[i] > 60) sousTest[i] = 60;
+                    if (sousTest[i] < -15) sousTest[i] = -15;
+                }
+
+                domaine[1] = (sousTest[1] + sousTest[2]) / 2;
+                domaine[2] = (sousTest[3] + sousTest[4]) / 2;
+                domaine[3] = (sousTest[5] + sousTest[6]) / 2;
+
+                let moyenneDomaines = (domaine[1] + domaine[2] + domaine[3]) / 3;
+                scoreFinal = Math.round(moyenneDomaines * 10);
+            } else {
+                let domaine = [];
+                for (let i = 1; i <= 3; i++) {
+                    domaine[i] = parseInt(document.getElementById('domaine' + i).value) || 0;
+                    if (domaine[i] > 120) domaine[i] = 120;
+                    if (domaine[i] < -30) domaine[i] = -30;
+                }
+
+                let moyenneDomaines = (domaine[1] + domaine[2] + domaine[3]) / 3;
+                scoreFinal = Math.round(moyenneDomaines * 10);
+            }
+
+            document.getElementById('result').innerText = "Votre score final : " + scoreFinal + " sur 600";
+        }
+    </script>
+</body>
+</html>
